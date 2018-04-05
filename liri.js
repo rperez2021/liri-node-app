@@ -14,7 +14,7 @@ input = input.join(" ")
 
 
 let liri = {
-    // commands: (input) => {
+    // commands: (my_tweets, spotify_this, movie_this, do_what_it_says, input) => {
     //     liri.my_tweets(input)
     //     liri.spotify_this(input)
     //     liri.movie_this(input)
@@ -94,8 +94,13 @@ let liri = {
     do_what_it_says: (input) => {
         // Using the fs Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
         fs.readFile('random.txt', 'utf8', (err, data) => {
+        
             if (err) throw err;
-            liri.thingtodo = data;
+            var dataArray = data.split(',');
+            var command = dataArray[0].trim();
+            var input = dataArray[1].trim();
+            //THIS IS THE PART I AM HAVING ISSUES WITH: 
+            liri[dataArray[0].trim()](dataArray[1].trim())
         });
         // It should run spotify-this-song for "I Want it That Way," as follows the text in random.txt.
         // Feel free to change the text in that document to test out the feature for other commands.
