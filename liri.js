@@ -14,6 +14,12 @@ input = input.join(" ")
 
 
 let liri = {
+    // commands: (input) => {
+    //     liri.my_tweets(input)
+    //     liri.spotify_this(input)
+    //     liri.movie_this(input)
+    //     liri.do_what_it_says(input)
+    // },
     my_tweets: (input) => {
         console.log("hi")
         var params = {
@@ -35,10 +41,16 @@ let liri = {
         });
     },
     spotify_this: (input) => {
+        var song;
+        if (input === "") {
+            song = 'The Sign Ace of Base';
+        } else {
+            song = input;
+        }
         var spotify = new Spotify(keys.spotify);
         spotify.search({
             type: 'track',
-            query: input
+            query: song
         }, function (err, data) {
             if (err) {
                 console.log('Error occurred: ' + err);
@@ -51,16 +63,40 @@ let liri = {
         });
     },
     movie_this: (input) => {
-        request('http://www.omdbapi.com/?apikey=c4448ae5&t=' + input, function (error, response, body) {
-            console.log('error:', error); // Print the error if one occurred
-            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-            console.log('body:', JSON.parse(body).Released); // Print the HTML for the Google homepage.
+        var movie;
+        if (input === "") {
+            movie = 'Mr Nobody';
+        } else {
+            movie = input;
+        }
+        request('http://www.omdbapi.com/?apikey=c4448ae5&t=' + movie, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                // * Title of the movie.
+                console.log(JSON.parse(body).Title);
+                // * Year the movie came out.
+                console.log(JSON.parse(body).Year);
+                // * IMDB Rating of the movie.
+                console.log(JSON.parse(body).Ratings[0].Source + ":", JSON.parse(body).Ratings[0].Value);
+                // * Rotten Tomatoes Rating of the movie.
+                console.log(JSON.parse(body).Ratings[1].Source + ":", JSON.parse(body).Ratings[1].Value);
+                // * Country where the movie was produced.
+                console.log(JSON.parse(body).Country);
+                // * Language of the movie.
+                console.log(JSON.parse(body).Language);
+                // * Plot of the movie.
+                console.log(JSON.parse(body).Plot);
+                // * Actors in the movie.
+                console.log(JSON.parse(body).Actors);
+            }
         });
     },
 
     do_what_it_says: (input) => {
-        // this is not completed
         // Using the fs Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
+        fs.readFile('random.txt', 'utf8', (err, data) => {
+            if (err) throw err;
+            liri.thingtodo = data;
+        });
         // It should run spotify-this-song for "I Want it That Way," as follows the text in random.txt.
         // Feel free to change the text in that document to test out the feature for other commands.
     },
@@ -71,7 +107,7 @@ let liri = {
 // }
 // dostuff();
 
-if (thingtodo === "my_tweets") { 
+if (thingtodo === "my_tweets") {
     liri.my_tweets(input);
 } else if (thingtodo === "spotify_this") {
     liri.spotify_this(input);
