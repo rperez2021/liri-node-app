@@ -10,16 +10,7 @@ var client = new Twitter(keys.twitter);
 var fs = require('fs')
 input = input.join(" ")
 
-
-
-
 let liri = {
-    // commands: (my_tweets, spotify_this, movie_this, do_what_it_says, input) => {
-    //     liri.my_tweets(input)
-    //     liri.spotify_this(input)
-    //     liri.movie_this(input)
-    //     liri.do_what_it_says(input)
-    // },
     my_tweets: (input) => {
         var params = {
             screen_name: '@smartassrob',
@@ -28,18 +19,14 @@ let liri = {
         client.get('statuses/user_timeline', params, function (error, tweets, response) {
             if (!error) {
                 console.log("Last 20 Tweets");
-                fs.appendFile('./log.txt', 'LOG ENTRY ' + Date() + '\r\n' + 'Command Used: my_tweets: \r\n', 'utf8', (error) => {
+                fs.appendFileSync('./log.txt', 'LOG ENTRY ' + Date() + '\r\n' + 'Command Used: my_tweets: \r\n', 'utf8', (error) => {
                     if (error) throw error;
                 })
                 for (i = 0; i < tweets.length; i++) {
                     console.log(i + 1 + ". " + tweets[i].text)
-                    fs.appendFile('./log.txt', i + 1 + ". " + tweets[i].text + '\r\n', 'utf8', (error) => {
-                        if (error) throw error;
-                    })
+                    fs.appendFileSync('./log.txt', i + 1 + ". " + tweets[i].text + '\r\n')
                 }
-                fs.appendFile('./log.txt', 'END OF ENTRY \r\n', 'utf8', (error) => {
-                    if (error) throw error;
-                })
+                fs.appendFileSync('./log.txt', 'END OF ENTRY \r\n')
             } else {
                 console.log(error)
                 fs.appendFile('./log.txt', 'ENCOUNTERED ERROR ' + error + '\r\n', 'utf8', (error) => {
@@ -71,12 +58,10 @@ let liri = {
                 console.log('Album Name:', data.tracks.items[0].album.name)
                 fs.appendFile('./log.txt', 'Song Information:\r\n' + 'Artist Name: ' + data.tracks.items[0].album.artists[0].name + '\r\n' +
                     'Track Name: ' + data.tracks.items[0].name + '\r\n' + 'URL: ' + data.tracks.items[0].external_urls.spotify + '\r\n' +
-                    'Album Name: ' + data.tracks.items[0].album.name + '\r\n', 'utf8', (error) => {
+                    'Album Name: ' + data.tracks.items[0].album.name + '\r\n' +
+                    'END OF ENTRY \r\n', 'utf8', (error) => {
                         if (error) throw error;
                     })
-                fs.appendFile('./log.txt', 'END OF ENTRY \r\n', 'utf8', (error) => {
-                    if (error) throw error;
-                })
             } else {
                 console.log('Oops an error occurred: ' + error);
                 fs.appendFile('./log.txt', 'ENCOUNTERED ERROR ' + error + '\r\n', 'utf8', (error) => {
@@ -94,7 +79,7 @@ let liri = {
         } else {
             movie = input;
         }
-        request('http://www.omdbapi.com/?apikey=c4448ae5&t=' + movie, function (error, response, body) {
+        request('http://www.omdbapi.com/?apikey='+keys.omdb.key+'&t=' + movie, function (error, response, body) {
             //Had to add a third operator for false due to the weirdness of the omdb api.
             if (!error && response.statusCode == 200 && JSON.parse(body).Response != 'False') {
                 fs.appendFile('./log.txt', 'LOG ENTRY ' + Date() + '\r\n' + 'Command Used: movie_this: \r\n', 'utf8', (error) => {
@@ -121,13 +106,9 @@ let liri = {
                     'Release Year: ' + JSON.parse(body).Year + '\r\n' + JSON.parse(body).Ratings[0].Source + "Rating: " + JSON.parse(body).Ratings[0].Value + '\r\n' +
                     JSON.parse(body).Ratings[1].Source + "Rating: " + JSON.parse(body).Ratings[1].Value + '\r\n' +
                     'Language: ' + JSON.parse(body).Language + '\r\n' + 'Plot: ' + JSON.parse(body).Plot + '\r\n' +
-                    'Actors: ' + JSON.parse(body).Actors + '\r\n', 'utf8', (error) => {
+                    'Actors: ' + JSON.parse(body).Actors + '\r\n' + 'END OF ENTRY \r\n', 'utf8', (error) => {
                         if (error) throw error;
                     })
-                fs.appendFile('./log.txt', 'END OF ENTRY \r\n', 'utf8', (error) => {
-                    if (error) throw error;
-                })
-
             } else {
                 console.log('Oops an error occurred: ' + JSON.parse(body).Error);
                 fs.appendFile('./log.txt', 'ENCOUNTERED ERROR ' + JSON.parse(body).Error + '\r\n', 'utf8', (error) => {
@@ -167,4 +148,7 @@ if (thingtodo === "my_tweets") {
     console.log("that is not a valid command")
     console.log("try the following commands: my_tweets // spotify_this [track] // " +
         "movie_this [movie] // do_what_it_says")
+        fs.appendFile('./log.txt', 'LOG ENTRY ' + Date() + '\r\n' + 'Invalid Command Used: ' + thingtodo + '\r\n' + 'END OF ENTRY \r\n', 'utf8', (error) => {
+                    if (error) throw error;
+                })
 }
