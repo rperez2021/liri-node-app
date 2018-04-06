@@ -3,7 +3,6 @@ const keys = require('./keys.js')
 let [nope, morenope, thingtodo, ...input] = process.argv
 var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
-var omdb = require('omdb');
 let request = require("request")
 
 var client = new Twitter(keys.twitter);
