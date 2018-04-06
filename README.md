@@ -21,7 +21,8 @@ Will display Artist(s), Song Name, Spotify Preview URL, Album
 ```
 movie_this (movie)
 
-Will display Title, Release Year, IMDB and Rotten Tomatoes Rating, Country, Language, a breif plot and the main actors. 
+Will display Title, Release Year, IMDB and Rotten Tomatoes Rating, 
+Country, Language, a brief plot and the main actors. 
 ```
 
 ```
@@ -29,3 +30,13 @@ do_what_it_says
 
 Will take input from random.txt and generate a search based on that. 
 ```
+
+### Dependencies
+
+   * [Twitter](https://www.npmjs.com/package/twitter)
+   
+   * [Node-Spotify-API](https://www.npmjs.com/package/node-spotify-api)
+   
+   * [Request](https://www.npmjs.com/package/request)
+
+   * [DotEnv](https://www.npmjs.com/package/dotenv)
